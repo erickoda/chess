@@ -1,7 +1,9 @@
-use crate::pieces::pieces::{Pieces, illustration::*};
+use crate::pieces::pieces::{Pieces, Position, ConvertedPositions,illustration::*};
 
+pub const WHITE_SQUARE: char = '⚈';
+pub const BLACK_SQUARE: char = '⚆';
 
-pub fn setup_board(board: &mut [[char; 8]; 8], white_pieces: &Pieces, black_pieces: &Pieces) {
+pub fn add_pieces_to_board(board: &mut [[char; 8]; 8], white_pieces: &Pieces, black_pieces: &Pieces) {
 
     //todo refatorar struct Pieces com Enum pra essa poha virar funcoes menores
     //spawn pawn
@@ -10,10 +12,10 @@ pub fn setup_board(board: &mut [[char; 8]; 8], white_pieces: &Pieces, black_piec
         board[black_pieces.pawn[i].x][black_pieces.pawn[i].y] =       BLACK_PAWN;
     }
 
-    //spawn tower
-    for i in 0..white_pieces.tower.len() {
-        board[white_pieces.tower[i].x][white_pieces.tower[i].y] =    WHITE_TOWER;
-        board[black_pieces.tower[i].x][black_pieces.tower[i].y] =    BLACK_TOWER;
+    //spawn rook
+    for i in 0..white_pieces.rook.len() {
+        board[white_pieces.rook[i].x][white_pieces.rook[i].y] =    WHITE_ROOK;
+        board[black_pieces.rook[i].x][black_pieces.rook[i].y] =    BLACK_ROOK;
     }
 
     //spawn bishop
@@ -36,15 +38,23 @@ pub fn setup_board(board: &mut [[char; 8]; 8], white_pieces: &Pieces, black_piec
     board[black_pieces.king[0].x][black_pieces.king[0].y] = BLACK_KING;
 }
 
-pub fn update_board(board: &mut [[char; 8]; 8], board_without_pieces: &[[char; 8]; 8], white_pieces: &Pieces, black_pieces: &Pieces){
+pub fn move_piece(board: &mut [[char; 8]; 8], old_piece_position: &mut Position, new_piece_position: &Position) {
 
-    for i in 0..board.len(){
-        for j in 0..board[i].len(){
-            board[i][j] = board_without_pieces[i][j];
-        }
-    }
+    let board_without_pieces = [
+        [WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE],
+        [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
+        [WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE],
+        [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
+        [WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE],
+        [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
+        [WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE],
+        [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
+    ];
 
-    setup_board(board, white_pieces, black_pieces);
+    board[new_piece_position.x][new_piece_position.y] = board[old_piece_position.x][old_piece_position.y];
+    board[old_piece_position.x][old_piece_position.y] = board_without_pieces[old_piece_position.x][old_piece_position.y];
+
+    *old_piece_position = *new_piece_position;
 }
 
 pub fn print_board(board: &mut [[char; 8]; 8]){
@@ -54,4 +64,19 @@ pub fn print_board(board: &mut [[char; 8]; 8]){
         }
         println!();
     }
+}
+
+pub fn verify_new_position(converted: &ConvertedPositions) -> bool{
+    let piece_is_out_of_board = converted.choosen_piece.x == 8 || converted.choosen_piece.y == 8 || converted.choosen_piece_new_position.x == 8 || converted.choosen_piece_new_position.y == 8;
+    if  piece_is_out_of_board {
+        println!("Out of the board!!!");
+        return false;
+    }
+
+    let piece_is_in_same_position = converted.choosen_piece.x == converted.choosen_piece_new_position.x && converted.choosen_piece.y == converted.choosen_piece_new_position.y;
+    if  piece_is_in_same_position {
+        println!("You can't move to the same position!!!");
+        return false;
+    }
+    true
 }

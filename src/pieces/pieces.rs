@@ -3,19 +3,18 @@ use std::io;
 pub mod illustration{
     pub const WHITE_PAWN   : char = '♟';
     pub const WHITE_KING   : char = '♚';
-    pub const WHITE_TOWER  : char = '♜';
+    pub const WHITE_ROOK  : char = '♜';
     pub const WHITE_QUEEN  : char = '♛';
     pub const WHITE_KNIGHT : char = '♞';
     pub const WHITE_BISHOP : char = '♝';
 
-    pub const BLACK_PAWN   : char = '♙';//🨣
-    pub const BLACK_KING   : char = '♔';//🨞
-    pub const BLACK_TOWER  : char = '♖';//🨠
-    pub const BLACK_QUEEN  : char = '♕';//🨟
-    pub const BLACK_KNIGHT : char = '♘';//🨢
-    pub const BLACK_BISHOP : char = '♗';//🨡
+    pub const BLACK_PAWN   : char = '♙';
+    pub const BLACK_KING   : char = '♔';
+    pub const BLACK_ROOK  : char = '♖';
+    pub const BLACK_QUEEN  : char = '♕';
+    pub const BLACK_KNIGHT : char = '♘';
+    pub const BLACK_BISHOP : char = '♗';
 }
-
 pub enum ColorOfPiece {
     White,
     Black,
@@ -79,7 +78,7 @@ impl Default for ConvertedPositions{
 
 pub struct Pieces {
     pub pawn:   [Position; 8],
-    pub tower:  [Position; 2],
+    pub rook:  [Position; 2],
     pub bishop: [Position; 2],
     pub knight: [Position; 2],
     pub queen:  [Position; 1],
@@ -91,7 +90,7 @@ impl Default for Pieces {
     fn default() -> Self {
         Pieces{
             pawn:   [Position::default(); 8],
-            tower:  [Position::default(); 2],
+            rook:  [Position::default(); 2],
             bishop: [Position::default(); 2],
             knight: [Position::default(); 2],
             queen:  [Position::default(); 1],
@@ -134,10 +133,10 @@ impl Pieces {
             self.pawn[i].x = (position_y as i32 + color_correction) as usize;
             self.pawn[i].y = i;
         }
-        //Tower
-        for i in 0..self.tower.len() {
-            self.tower[i].x = position_y;
-            self.tower[i].y =  i*7;
+        //rook
+        for i in 0..self.rook.len() {
+            self.rook[i].x = position_y;
+            self.rook[i].y =  i*7;
         }
         //Knight
         for i in 0..self.knight.len() {
@@ -157,59 +156,49 @@ impl Pieces {
         self.king[0].y = 4;
     }
 
-
     
-    pub fn move_piece(&mut self, converted: &ConvertedPositions){
 
-        //talvez se eu retornar o endereco da peca movida, eu consiga usar isso para manipular a peca diretamente
-
+    pub fn get_choosen_piece(&mut self, converted: &ConvertedPositions) -> Option<&mut Position>{
+        
         for pawn_position in &mut self.pawn {
-            let is_pawn = pawn_position.x == converted.choosen_piece.x && pawn_position.y == converted.choosen_piece.y;
-            if  is_pawn {
-                *pawn_position = converted.choosen_piece_new_position;
-                return;
+            let is_pawn = dbg!(pawn_position.x) == dbg!(converted.choosen_piece.x) && dbg!(pawn_position.y) == dbg!(converted.choosen_piece.y);
+            if  dbg!(is_pawn) {
+                return Some(pawn_position);
             }
         }
 
-        for tower_position in &mut self.tower {
-            let is_tower = tower_position.x == converted.choosen_piece.x && tower_position.y == converted.choosen_piece.y;
-            if is_tower {
-                *tower_position = converted.choosen_piece_new_position;
-                return;
+        for rook_position in &mut self.rook {
+            let is_rook = rook_position.x == converted.choosen_piece.x && rook_position.y == converted.choosen_piece.y;
+            if is_rook {
+                return Some(rook_position);
             }
         }
 
         for knight_position in &mut self.knight {
             let is_knight = knight_position.x == converted.choosen_piece.x && knight_position.y == converted.choosen_piece.y;
             if is_knight {
-                *knight_position = converted.choosen_piece_new_position;
-                return;
+                return Some(knight_position);
             }
         }
 
         for bishop_position in &mut self.bishop {
             let is_bishop = bishop_position.x == converted.choosen_piece.x && bishop_position.y == converted.choosen_piece.y;
             if is_bishop {
-                *bishop_position = converted.choosen_piece_new_position;
-                return;
+                return Some(bishop_position);
             }
         }
-
-        for queen_position in &mut self.queen {
-            let is_queen = queen_position.x == converted.choosen_piece.x && queen_position.y == converted.choosen_piece.y;
-            if is_queen {
-                *queen_position = converted.choosen_piece_new_position;
-                return;
-            }
+        
+        let is_queen = self.queen[0].x == converted.choosen_piece.x && self.queen[0].y == converted.choosen_piece.y;
+        if  is_queen {
+            return Some(&mut self.queen[0]);
         }
-
-        for king_position in &mut self.king {
-            let is_king = king_position.x == converted.choosen_piece.x && king_position.y == converted.choosen_piece.y;
-            if is_king {
-                *king_position = converted.choosen_piece_new_position;
-                return;
-            }
+        
+        let is_king = self.king[0].x == converted.choosen_piece.x && self.king[0].y == converted.choosen_piece.y;
+        if is_king {
+            return Some(&mut self.king[0]);
         }
+        println!("pinto2");
+        return None;
     }
 }
 
