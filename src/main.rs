@@ -32,13 +32,13 @@ fn main() {
     while !won {
         print_board(&mut board);
 
-        println!("What Piece do you want to move? (ex: a1 or A1) ");
+        println!("What Piece do you want to move? (ex: a1 or A1)");
         get_position_of(&mut choosen_piece);
-        converted.choosen_piece.convert(&choosen_piece);
-
-        println!("To where do you want to move? (ex: a1 or A1) ");
+        
+        println!("To where do you want to move? (ex: a1 or A1)");
         get_position_of(&mut choosen_position);
         
+        converted.choosen_piece.convert(&choosen_piece);
         converted.choosen_piece_new_position.convert(&choosen_position);
 
         let next_position_is_valid = verify_new_position(&converted);
@@ -46,14 +46,12 @@ fn main() {
             continue;
         }
 
-        println!("{}", board[converted.choosen_piece.x][converted.choosen_piece.y]);
-
         match is_white_turn{
             true => {
-                choosen_piece_ptr = match white_pieces.get_choosen_piece(&converted) {
+                choosen_piece_ptr = match white_pieces.get_choosen_piece_ptr(&converted) {
                     Some(piece) => piece,
                     None => {
-                        println!("You can't move this piece!!!");
+                        println!("None white piece selected!!!");
                         continue;
                     },
                 };
@@ -62,10 +60,10 @@ fn main() {
                 is_white_turn = false;
             },
             false => {
-                choosen_piece_ptr = match black_pieces.get_choosen_piece(&converted) {
+                choosen_piece_ptr = match black_pieces.get_choosen_piece_ptr(&converted) {
                     Some(piece) => piece,
                     None => {
-                        println!("You can't move this piece!!!");
+                        println!("None black piece selected!!!");
                         continue;
                     },
                 };

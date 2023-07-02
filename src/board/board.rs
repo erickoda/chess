@@ -80,3 +80,9 @@ pub fn verify_new_position(converted: &ConvertedPositions) -> bool{
     }
     true
 }
+
+fn is_movimentation_valid(choosen_piece_ptr: &Position) -> bool {
+    choosen_piece_ptr.x;
+
+    true
+}

@@ -3,14 +3,14 @@ use std::io;
 pub mod illustration{
     pub const WHITE_PAWN   : char = '♟';
     pub const WHITE_KING   : char = '♚';
-    pub const WHITE_ROOK  : char = '♜';
+    pub const WHITE_ROOK   : char = '♜';
     pub const WHITE_QUEEN  : char = '♛';
     pub const WHITE_KNIGHT : char = '♞';
     pub const WHITE_BISHOP : char = '♝';
 
     pub const BLACK_PAWN   : char = '♙';
     pub const BLACK_KING   : char = '♔';
-    pub const BLACK_ROOK  : char = '♖';
+    pub const BLACK_ROOK   : char = '♖';
     pub const BLACK_QUEEN  : char = '♕';
     pub const BLACK_KNIGHT : char = '♘';
     pub const BLACK_BISHOP : char = '♗';
@@ -18,6 +18,15 @@ pub mod illustration{
 pub enum ColorOfPiece {
     White,
     Black,
+}
+
+pub enum TypeOfPiece {
+    Pawn,
+    King,
+    Rook,
+    Queen,
+    Knight,
+    Bishop,
 }
 
 #[derive(Copy, Clone)]
@@ -62,6 +71,12 @@ impl Position {
     }
 }
 
+pub struct Piece {
+    pub color:    ColorOfPiece,
+    pub type_of:  TypeOfPiece,
+    pub position: Position,
+}
+
 pub struct ConvertedPositions{
     pub choosen_piece:              Position,
     pub choosen_piece_new_position: Position,
@@ -78,7 +93,7 @@ impl Default for ConvertedPositions{
 
 pub struct Pieces {
     pub pawn:   [Position; 8],
-    pub rook:  [Position; 2],
+    pub rook:   [Position; 2],
     pub bishop: [Position; 2],
     pub knight: [Position; 2],
     pub queen:  [Position; 1],
@@ -90,7 +105,7 @@ impl Default for Pieces {
     fn default() -> Self {
         Pieces{
             pawn:   [Position::default(); 8],
-            rook:  [Position::default(); 2],
+            rook:   [Position::default(); 2],
             bishop: [Position::default(); 2],
             knight: [Position::default(); 2],
             queen:  [Position::default(); 1],
@@ -156,13 +171,11 @@ impl Pieces {
         self.king[0].y = 4;
     }
 
-    
-
-    pub fn get_choosen_piece(&mut self, converted: &ConvertedPositions) -> Option<&mut Position>{
+    pub fn get_choosen_piece_ptr(&mut self, converted: &ConvertedPositions) -> Option<&mut Position>{
         
         for pawn_position in &mut self.pawn {
-            let is_pawn = dbg!(pawn_position.x) == dbg!(converted.choosen_piece.x) && dbg!(pawn_position.y) == dbg!(converted.choosen_piece.y);
-            if  dbg!(is_pawn) {
+            let is_pawn = pawn_position.x == converted.choosen_piece.x && pawn_position.y == converted.choosen_piece.y;
+            if  is_pawn {
                 return Some(pawn_position);
             }
         }
