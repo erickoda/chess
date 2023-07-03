@@ -105,17 +105,6 @@ impl Default for Piece {
     }
 }
 
-
-impl Piece {
-    pub fn pawn_setup(&mut self, position: &Position) -> Piece {
-        Piece {
-            color:    self.color,
-            type_of:  Some(TypeOfPiece::Pawn),
-            position: Position::default(),
-        }
-    }
-}
-
 pub struct Pieces {
     //refazer com vector
     pub pawn:   [Piece; 8],
