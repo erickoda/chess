@@ -1,4 +1,4 @@
-use crate::pieces::{pieces::{Pieces, Position, ConvertedPositions,illustration::*, Piece, TypeOfPiece, ColorOfPiece}};
+use crate::pieces::pieces::{Pieces, Position, ConvertedPositions,illustration::*, Piece, TypeOfPiece, ColorOfPiece};
 
 pub const WHITE_SQUARE: char = '⚈';
 pub const BLACK_SQUARE: char = '⚆';
@@ -103,8 +103,14 @@ pub fn move_piece(board: &mut [[char; 8]; 8], piece: &mut Piece, new_piece_posit
     };
 
     board[piece.position.x][piece.position.y] = match piece.position.x + piece.position.y % 2{
-        0 => BLACK_SQUARE,
-        _ => WHITE_SQUARE,
+        0 => match piece.position.x % 2 {
+            0 => BLACK_SQUARE,
+            _ => WHITE_SQUARE,
+        },
+        _ => match piece.position.x % 2 {
+            0 => WHITE_SQUARE,
+            _ => BLACK_SQUARE,
+        }
     };
 }
 
