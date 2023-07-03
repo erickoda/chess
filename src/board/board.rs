@@ -1,4 +1,4 @@
-use crate::pieces::{pieces::{Pieces, Position, ConvertedPositions,illustration::*, Piece, TypeOfPiece, ColorOfPiece}, self};
+use crate::pieces::{pieces::{Pieces, Position, ConvertedPositions,illustration::*, Piece, TypeOfPiece, ColorOfPiece}};
 
 pub const WHITE_SQUARE: char = '⚈';
 pub const BLACK_SQUARE: char = '⚆';
