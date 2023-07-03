@@ -18,7 +18,7 @@ fn main() {
         [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
     ];
     
-    let mut choosen_piece_ptr: &mut Position;
+    let mut choosen_piece_ptr: &mut Piece;
     let mut white_pieces = Pieces::setup(ColorOfPiece::White);
     let mut black_pieces = Pieces::setup(ColorOfPiece::Black);
 
@@ -55,7 +55,15 @@ fn main() {
                         continue;
                     },
                 };
-                move_piece(&mut board, choosen_piece_ptr, &converted.choosen_piece_new_position);
+
+                let can_move = is_move_valid(&mut choosen_piece_ptr, &converted.choosen_piece_new_position);
+                if !can_move {
+                    println!("INVALID MOVE!");
+                    continue;
+                }
+
+                move_piece(&mut board, &mut choosen_piece_ptr, &converted.choosen_piece_new_position);
+                choosen_piece_ptr.position = converted.choosen_piece_new_position;
     
                 is_white_turn = false;
             },
@@ -67,7 +75,15 @@ fn main() {
                         continue;
                     },
                 };
+
+                let can_move = is_move_valid(&mut choosen_piece_ptr, &converted.choosen_piece_new_position);
+                if !can_move {
+                    println!("INVALID MOVE!");
+                    continue;
+                }
+                
                 move_piece(&mut board, &mut choosen_piece_ptr, &converted.choosen_piece_new_position);
+                choosen_piece_ptr.position = converted.choosen_piece_new_position;
     
                 is_white_turn = true
             },

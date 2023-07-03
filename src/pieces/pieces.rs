@@ -15,11 +15,14 @@ pub mod illustration{
     pub const BLACK_KNIGHT : char = '♘';
     pub const BLACK_BISHOP : char = '♗';
 }
+
+#[derive(Clone, Copy)]
 pub enum ColorOfPiece {
     White,
     Black,
 }
 
+#[derive(Clone, Copy)]
 pub enum TypeOfPiece {
     Pawn,
     King,
@@ -71,12 +74,6 @@ impl Position {
     }
 }
 
-pub struct Piece {
-    pub color:    ColorOfPiece,
-    pub type_of:  TypeOfPiece,
-    pub position: Position,
-}
-
 pub struct ConvertedPositions{
     pub choosen_piece:              Position,
     pub choosen_piece_new_position: Position,
@@ -89,28 +86,55 @@ impl Default for ConvertedPositions{
             choosen_piece_new_position: Position::default(),
         }
     }
+}   
+
+#[derive(Clone, Copy)]
+pub struct Piece {
+    pub color:    Option<ColorOfPiece>,
+    pub type_of:  Option<TypeOfPiece>,
+    pub position: Position,
+}
+
+impl Default for Piece {
+    fn default() -> Self {
+        Piece {
+            color:    None,
+            type_of:  None,
+            position: Position::default(),
+        }
+    }
+}
+
+
+impl Piece {
+    pub fn pawn_setup(&mut self, position: &Position) -> Piece {
+        Piece {
+            color:    self.color,
+            type_of:  Some(TypeOfPiece::Pawn),
+            position: Position::default(),
+        }
+    }
 }
 
 pub struct Pieces {
-    pub pawn:   [Position; 8],
-    pub rook:   [Position; 2],
-    pub bishop: [Position; 2],
-    pub knight: [Position; 2],
-    pub queen:  [Position; 1],
-    pub king:   [Position; 1],
-    color: Option<ColorOfPiece>,
+    //refazer com vector
+    pub pawn:   [Piece; 8],
+    pub rook:   [Piece; 2],
+    pub bishop: [Piece; 2],
+    pub knight: [Piece; 2],
+    pub queen:  [Piece; 1],
+    pub king:   [Piece; 1],
 }
 
 impl Default for Pieces {
     fn default() -> Self {
         Pieces{
-            pawn:   [Position::default(); 8],
-            rook:   [Position::default(); 2],
-            bishop: [Position::default(); 2],
-            knight: [Position::default(); 2],
-            queen:  [Position::default(); 1],
-            king:   [Position::default(); 1],
-            color:  None,
+            pawn:   [Piece::default(); 8],
+            rook:   [Piece::default(); 2],
+            bishop: [Piece::default(); 2],
+            knight: [Piece::default(); 2],
+            queen:  [Piece::default(); 1],
+            king:   [Piece::default(); 1],
         }
     }
 }
@@ -120,97 +144,138 @@ impl Pieces {
     pub fn setup(color: ColorOfPiece) -> Self {
 
         let mut pieces = Pieces::default();
-        pieces.setup_color(color);
-        pieces.setup_position();
+
+        for i in 0..pieces.pawn.len() {
+            pieces.pawn[i].color = Some(color);
+            pieces.pawn[i].position = match pieces.pawn[i].color {
+                Some(ColorOfPiece::White) => Position{x: 6, y: i},
+                Some(ColorOfPiece::Black) => Position{x: 1, y: i},
+                None => panic!("Couldn't create pieces color"),
+            };
+            pieces.pawn[i].type_of = match pieces.pawn[i].color {
+                Some(ColorOfPiece::White) => Some(TypeOfPiece::Pawn),
+                Some(ColorOfPiece::Black) => Some(TypeOfPiece::Pawn),
+                None => panic!("Couldn't create pieces color"),
+            };
+        }
+
+        for i in 0..pieces.rook.len() {
+            pieces.rook[i].color = Some(color);
+            pieces.rook[i].position = match pieces.rook[i].color {
+                Some(ColorOfPiece::White) => Position{x: 7, y: i*7},
+                Some(ColorOfPiece::Black) => Position{x: 0, y: i*7},
+                None => panic!("Couldn't create pieces color"),
+            };
+            pieces.rook[i].type_of = match pieces.rook[i].color {
+                Some(ColorOfPiece::White) => Some(TypeOfPiece::Rook),
+                Some(ColorOfPiece::Black) => Some(TypeOfPiece::Rook),
+                None => panic!("Couldn't create pieces color"),
+            };
+        }
+
+        for i in 0..pieces.bishop.len() {
+            pieces.bishop[i].color = Some(color);
+            pieces.bishop[i].position = match pieces.bishop[i].color {
+                Some(ColorOfPiece::White) => Position{x: 7, y: i*3+2},
+                Some(ColorOfPiece::Black) => Position{x: 0, y: i*3+2},
+                None => panic!("Couldn't create pieces color"),
+            };
+            pieces.bishop[i].type_of = match pieces.bishop[i].color {
+                Some(ColorOfPiece::White) => Some(TypeOfPiece::Bishop),
+                Some(ColorOfPiece::Black) => Some(TypeOfPiece::Bishop),
+                None => panic!("Couldn't create pieces color"),
+            };
+        }
+
+        for i in 0..pieces.knight.len() {
+            pieces.knight[i].color = Some(color);
+            pieces.knight[i].position = match pieces.knight[i].color {
+                Some(ColorOfPiece::White) => Position{x: 7, y: i*5+1},
+                Some(ColorOfPiece::Black) => Position{x: 0, y: i*5+1},
+                None => panic!("Couldn't create pieces color"),
+            };
+            pieces.knight[i].type_of = match pieces.knight[i].color {
+                Some(ColorOfPiece::White) => Some(TypeOfPiece::Knight),
+                Some(ColorOfPiece::Black) => Some(TypeOfPiece::Knight),
+                None => panic!("Couldn't create pieces color"),
+            };
+        }
+
+        for i in 0..pieces.queen.len() {
+            pieces.queen[i].color = Some(color);
+            pieces.queen[i].position = match pieces.queen[i].color {
+                Some(ColorOfPiece::White) => Position{x: 7, y: 3},
+                Some(ColorOfPiece::Black) => Position{x: 0, y: 3},
+                None => panic!("Couldn't create pieces color"),
+            };
+            pieces.queen[i].type_of = match pieces.queen[i].color {
+                Some(ColorOfPiece::White) => Some(TypeOfPiece::Queen),
+                Some(ColorOfPiece::Black) => Some(TypeOfPiece::Queen),
+                None => panic!("Couldn't create pieces color"),
+            };
+        }
+
+        for i in 0..pieces.king.len() {
+            pieces.king[i].color = Some(color);
+            pieces.king[i].position = match pieces.king[i].color {
+                Some(ColorOfPiece::White) => Position{x: 7, y: 4},
+                Some(ColorOfPiece::Black) => Position{x: 0, y: 4},
+                None => panic!("Couldn't create pieces color"),
+            };
+            pieces.king[i].type_of = match pieces.king[i].color {
+                Some(ColorOfPiece::White) => Some(TypeOfPiece::King),
+                Some(ColorOfPiece::Black) => Some(TypeOfPiece::King),
+                None => panic!("Couldn't create pieces color"),
+            };
+        }
 
         pieces
     }
 
-    fn setup_color(&mut self, color: ColorOfPiece){
-        self.color = Some(color);
-    }
-
-    fn setup_position(&mut self){
-
-        let position_y: usize = match self.color {
-            Some(ColorOfPiece::White) => 7,
-            Some(ColorOfPiece::Black) => 0,
-            _ => panic!("Couldn't create pieces color"),
-        };
-        let color_correction: i32 = match self.color {
-            Some(ColorOfPiece::White) => -1,
-            Some(ColorOfPiece::Black) => 1,
-            _ => panic!("Couldn't create pieces color"),
-        };
-
-        //Pawn
-        for i in 0..self.pawn.len() {
-            self.pawn[i].x = (position_y as i32 + color_correction) as usize;
-            self.pawn[i].y = i;
-        }
-        //rook
-        for i in 0..self.rook.len() {
-            self.rook[i].x = position_y;
-            self.rook[i].y =  i*7;
-        }
-        //Knight
-        for i in 0..self.knight.len() {
-            self.knight[i].x = position_y;
-            self.knight[i].y =  i*5+1;
-        }
-        //Bishop
-        for i in 0..self.bishop.len(){
-            self.bishop[i].x = position_y;
-            self.bishop[i].y =  i*3+2;
-        }
-        //queen
-        self.queen[0].x = position_y;
-        self.queen[0].y = 3;
-        //King
-        self.king[0].x = position_y;
-        self.king[0].y = 4;
-    }
-
-    pub fn get_choosen_piece_ptr(&mut self, converted: &ConvertedPositions) -> Option<&mut Position>{
+    pub fn get_choosen_piece_ptr(&mut self, converted: &ConvertedPositions) -> Option<&mut Piece>{
         
-        for pawn_position in &mut self.pawn {
-            let is_pawn = pawn_position.x == converted.choosen_piece.x && pawn_position.y == converted.choosen_piece.y;
+        for pawn in &mut self.pawn {
+            let is_pawn = pawn.position.x == converted.choosen_piece.x && pawn.position.y == converted.choosen_piece.y;
             if  is_pawn {
-                return Some(pawn_position);
+                return Some(pawn);
             }
         }
 
-        for rook_position in &mut self.rook {
-            let is_rook = rook_position.x == converted.choosen_piece.x && rook_position.y == converted.choosen_piece.y;
+        for rook in &mut self.rook {
+            let is_rook = rook.position.x == converted.choosen_piece.x && rook.position.y == converted.choosen_piece.y;
             if is_rook {
-                return Some(rook_position);
+                return Some(rook);
             }
         }
 
-        for knight_position in &mut self.knight {
-            let is_knight = knight_position.x == converted.choosen_piece.x && knight_position.y == converted.choosen_piece.y;
+        for knight in &mut self.knight {
+            let is_knight = knight.position.x == converted.choosen_piece.x && knight.position.y == converted.choosen_piece.y;
             if is_knight {
-                return Some(knight_position);
+                return Some(knight);
             }
         }
 
-        for bishop_position in &mut self.bishop {
-            let is_bishop = bishop_position.x == converted.choosen_piece.x && bishop_position.y == converted.choosen_piece.y;
+        for bishop in &mut self.bishop {
+            let is_bishop = bishop.position.x == converted.choosen_piece.x && bishop.position.y == converted.choosen_piece.y;
             if is_bishop {
-                return Some(bishop_position);
+                return Some(bishop);
             }
         }
         
-        let is_queen = self.queen[0].x == converted.choosen_piece.x && self.queen[0].y == converted.choosen_piece.y;
-        if  is_queen {
-            return Some(&mut self.queen[0]);
+        for queen in &mut self.queen {
+            let is_queen = queen.position.x == converted.choosen_piece.x && queen.position.y == converted.choosen_piece.y;
+            if  is_queen {
+                return Some(queen);
+            }
         }
-        
-        let is_king = self.king[0].x == converted.choosen_piece.x && self.king[0].y == converted.choosen_piece.y;
-        if is_king {
-            return Some(&mut self.king[0]);
+
+        for king in &mut self.king {
+            let is_king = king.position.x == converted.choosen_piece.x && king.position.y == converted.choosen_piece.y;
+            if is_king {
+                return Some(king);
+            }
         }
-        println!("pinto2");
+
         return None;
     }
 }
