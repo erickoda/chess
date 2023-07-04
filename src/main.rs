@@ -27,8 +27,9 @@ fn main() {
     let mut choosen_position = String::with_capacity(2);
     let mut converted = ConvertedPositions::default();
     
-    add_pieces_to_board(&mut board, &white_pieces, &black_pieces);
-
+    add_pieces_to_board(&mut board, &white_pieces);
+    add_pieces_to_board(&mut board, &black_pieces);
+    
     while !won {
         print_board(&mut board);
 

@@ -3,53 +3,48 @@ use crate::pieces::pieces::{Pieces, Position, ConvertedPositions,illustration::*
 pub const WHITE_SQUARE: char = '⚈';
 pub const BLACK_SQUARE: char = '⚆';
 
-pub fn add_pieces_to_board(board: &mut [[char; 8]; 8], white_pieces: &Pieces, black_pieces: &Pieces) {
+pub fn add_pieces_to_board(board: &mut [[char; 8]; 8], pieces: &Pieces) {
 
-    //todo refatorar struct Pieces com Enum pra essa poha virar funcoes menores
-    //spawn pawn
-    for i in 0..white_pieces.pawn.len() {
-        board[white_pieces.pawn[i].position.x][white_pieces.pawn[i].position.y] =     WHITE_PAWN;
-        board[black_pieces.pawn[i].position.x][black_pieces.pawn[i].position.y] =     BLACK_PAWN;
+    for pawn in pieces.pawn {
+        match pawn.color.unwrap() {
+            ColorOfPiece::White => board[pawn.position.x][pawn.position.y] = WHITE_PAWN,
+            ColorOfPiece::Black => board[pawn.position.x][pawn.position.y] = BLACK_PAWN,
+        };
     }
 
     //spawn rook
-    for i in 0..white_pieces.rook.len() {
-        board[white_pieces.rook[i].position.x][white_pieces.rook[i].position.y] =     WHITE_ROOK;
-        board[black_pieces.rook[i].position.x][black_pieces.rook[i].position.y] =     BLACK_ROOK;
+    for rook in pieces.rook {
+        match rook.color.unwrap() {
+            ColorOfPiece::White => board[rook.position.x][rook.position.y] = WHITE_ROOK,
+            ColorOfPiece::Black => board[rook.position.x][rook.position.y] = BLACK_ROOK,
+        };
     }
 
     //spawn bishop
-    for i in 0..white_pieces.bishop.len() {
-        board[white_pieces.bishop[i].position.x][white_pieces.bishop[i].position.y] = WHITE_BISHOP;
-        board[black_pieces.bishop[i].position.x][black_pieces.bishop[i].position.y] = BLACK_BISHOP;
+    for bishop in pieces.bishop {
+        match bishop.color.unwrap() {
+            ColorOfPiece::White => board[bishop.position.x][bishop.position.y] = WHITE_BISHOP,
+            ColorOfPiece::Black => board[bishop.position.x][bishop.position.y] = BLACK_BISHOP,
+        };
     }
 
-    //spawn horse
-    for i in 0..white_pieces.knight.len() {
-        board[white_pieces.knight[i].position.x][white_pieces.knight[i].position.y] = WHITE_KNIGHT;
-        board[black_pieces.knight[i].position.x][black_pieces.knight[i].position.y] = BLACK_KNIGHT;
+    //spawn knight
+    for knight in pieces.knight {
+        match knight.color.unwrap() {
+            ColorOfPiece::White => board[knight.position.x][knight.position.y] = WHITE_KNIGHT,
+            ColorOfPiece::Black => board[knight.position.x][knight.position.y] = BLACK_KNIGHT,
+        };
     }
 
     //spawn queen
-    board[white_pieces.queen[0].position.x][white_pieces.queen[0].position.y] = WHITE_QUEEN;
-    board[black_pieces.queen[0].position.x][black_pieces.queen[0].position.y] = BLACK_QUEEN;
+    board[pieces.queen[0].position.x][pieces.queen[0].position.y] = WHITE_QUEEN;
+    board[pieces.queen[0].position.x][pieces.queen[0].position.y] = BLACK_QUEEN;
     //spawn king
-    board[white_pieces.king[0].position.x][white_pieces.king[0].position.y] = WHITE_KING;
-    board[black_pieces.king[0].position.x][black_pieces.king[0].position.y] = BLACK_KING;
+    board[pieces.king[0].position.x][pieces.king[0].position.y] = WHITE_KING;
+    board[pieces.king[0].position.x][pieces.king[0].position.y] = BLACK_KING;
 }
 
 pub fn move_piece(board: &mut [[char; 8]; 8], piece: &mut Piece, new_piece_position: &Position) {
-
-    let board_without_pieces = [
-        [WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE],
-        [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
-        [WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE],
-        [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
-        [WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE],
-        [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
-        [WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE],
-        [BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE, BLACK_SQUARE, WHITE_SQUARE],
-    ];
 
     board[new_piece_position.x][new_piece_position.y] = match piece.type_of.unwrap() {
         TypeOfPiece::Pawn => match piece.color.unwrap() {
