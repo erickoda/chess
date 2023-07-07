@@ -63,6 +63,12 @@ fn main() {
                     continue;
                 }
 
+                let has_piece_in_path = dbg!(has_piece_in_path(&board, &choosen_piece_ptr, &converted.choosen_piece_new_position));
+                if  has_piece_in_path {
+                    println!("Piece in the path, choose a new position!");
+                    continue;
+                }
+
                 move_piece(&mut board, &mut choosen_piece_ptr, &converted.choosen_piece_new_position);
                 choosen_piece_ptr.position = converted.choosen_piece_new_position;
     
@@ -77,9 +83,15 @@ fn main() {
                     },
                 };
 
-                let can_move = is_move_valid(&mut choosen_piece_ptr, &converted.choosen_piece_new_position);
-                if !can_move {
+                let valid_move_for_piece = is_move_valid(&mut choosen_piece_ptr, &converted.choosen_piece_new_position);
+                if !valid_move_for_piece {
                     println!("INVALID MOVE!");
+                    continue;
+                }
+
+                let has_piece_in_path = has_piece_in_path(&mut board, &choosen_piece_ptr, &converted.choosen_piece_new_position);
+                if  has_piece_in_path {
+                    println!("Piece in the path, choose a new position!");
                     continue;
                 }
                 

@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::pieces::pieces::{Pieces, Position, ConvertedPositions,illustration::*, Piece, TypeOfPiece, ColorOfPiece};
 
 pub const WHITE_SQUARE: char = '⚈';
@@ -202,4 +204,46 @@ pub fn is_move_valid(choosen_piece_ptr: &Piece, new_piece_position: &Position) -
             return false;
         }
     }
+}
+
+
+pub fn has_piece_in_path(board: &[[char; 8]; 8], piece: &Piece, new_piece_position: &Position) -> bool{
+
+    let lines_iter = match piece.position.x.cmp(&new_piece_position.x) {
+        Ordering::Greater  => Some(new_piece_position.x..piece.position.x),
+        Ordering::Less     => Some(piece.position.x..new_piece_position.x),
+        Ordering::Equal    => None,
+    };
+
+    let column_iter = match piece.position.y.cmp(&new_piece_position.x) {
+        Ordering::Greater => Some(new_piece_position.y..piece.position.y),
+        Ordering::Less    => Some(piece.position.y..new_piece_position.y),
+        Ordering::Equal   => None,
+    };
+
+    dbg!(&lines_iter);
+    dbg!(&column_iter);
+
+    match lines_iter {
+        Some(_) => for line in lines_iter.unwrap(){
+                        match column_iter {
+                            Some(_) => for column in column_iter.clone().unwrap() {
+                                            if dbg!(board[line][column] != WHITE_SQUARE && board[line][column] != BLACK_SQUARE) {
+                                                return true;
+                                            } 
+                                    },
+                
+                            None => if dbg!(board[line][piece.position.y] != WHITE_SQUARE && board[line][piece.position.y] != BLACK_SQUARE) {
+                                        return true;
+                                    } 
+                        }
+                    }
+        None => for column in column_iter.unwrap() {
+                    if board[piece.position.x][column] != WHITE_SQUARE && board[piece.position.x][column] != BLACK_SQUARE{
+                        return true;
+                    }
+                }
+    }
+
+    false    
 }
