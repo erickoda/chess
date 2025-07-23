@@ -75,15 +75,15 @@ impl Position {
 }
 
 pub struct ConvertedPositions{
-    pub choosen_piece:              Position,
-    pub choosen_piece_new_position: Position,
+    pub chosen_piece:              Position,
+    pub chosen_piece_new_position: Position,
 }
 
 impl Default for ConvertedPositions{
     fn default() -> Self {
         ConvertedPositions{
-            choosen_piece:              Position::default(),
-            choosen_piece_new_position: Position::default(),
+            chosen_piece:              Position::default(),
+            chosen_piece_new_position: Position::default(),
         }
     }
 }   
@@ -221,45 +221,45 @@ impl Pieces {
         pieces
     }
 
-    pub fn get_choosen_piece_ptr(&mut self, converted: &ConvertedPositions) -> Option<&mut Piece>{
+    pub fn get_chosen_piece_ptr(&mut self, converted: &ConvertedPositions) -> Option<&mut Piece>{
         
         for pawn in &mut self.pawn {
-            let is_pawn = pawn.position.x == converted.choosen_piece.x && pawn.position.y == converted.choosen_piece.y;
+            let is_pawn = pawn.position.x == converted.chosen_piece.x && pawn.position.y == converted.chosen_piece.y;
             if  is_pawn {
                 return Some(pawn);
             }
         }
 
         for rook in &mut self.rook {
-            let is_rook = rook.position.x == converted.choosen_piece.x && rook.position.y == converted.choosen_piece.y;
+            let is_rook = rook.position.x == converted.chosen_piece.x && rook.position.y == converted.chosen_piece.y;
             if is_rook {
                 return Some(rook);
             }
         }
 
         for knight in &mut self.knight {
-            let is_knight = knight.position.x == converted.choosen_piece.x && knight.position.y == converted.choosen_piece.y;
+            let is_knight = knight.position.x == converted.chosen_piece.x && knight.position.y == converted.chosen_piece.y;
             if is_knight {
                 return Some(knight);
             }
         }
 
         for bishop in &mut self.bishop {
-            let is_bishop = bishop.position.x == converted.choosen_piece.x && bishop.position.y == converted.choosen_piece.y;
+            let is_bishop = bishop.position.x == converted.chosen_piece.x && bishop.position.y == converted.chosen_piece.y;
             if is_bishop {
                 return Some(bishop);
             }
         }
         
         for queen in &mut self.queen {
-            let is_queen = queen.position.x == converted.choosen_piece.x && queen.position.y == converted.choosen_piece.y;
+            let is_queen = queen.position.x == converted.chosen_piece.x && queen.position.y == converted.chosen_piece.y;
             if  is_queen {
                 return Some(queen);
             }
         }
 
         for king in &mut self.king {
-            let is_king = king.position.x == converted.choosen_piece.x && king.position.y == converted.choosen_piece.y;
+            let is_king = king.position.x == converted.chosen_piece.x && king.position.y == converted.chosen_piece.y;
             if is_king {
                 return Some(king);
             }

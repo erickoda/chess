@@ -121,13 +121,13 @@ pub fn print_board(board: &mut [[char; 8]; 8]){
 }
 
 pub fn verify_new_position(converted: &ConvertedPositions) -> bool{
-    let piece_is_out_of_board = converted.choosen_piece.x == 8 || converted.choosen_piece.y == 8 || converted.choosen_piece_new_position.x == 8 || converted.choosen_piece_new_position.y == 8;
+    let piece_is_out_of_board = converted.chosen_piece.x == 8 || converted.chosen_piece.y == 8 || converted.chosen_piece_new_position.x == 8 || converted.chosen_piece_new_position.y == 8;
     if  piece_is_out_of_board {
         println!("Out of the board!!!");
         return false;
     }
 
-    let piece_is_in_same_position = converted.choosen_piece.x == converted.choosen_piece_new_position.x && converted.choosen_piece.y == converted.choosen_piece_new_position.y;
+    let piece_is_in_same_position = converted.chosen_piece.x == converted.chosen_piece_new_position.x && converted.chosen_piece.y == converted.chosen_piece_new_position.y;
     if  piece_is_in_same_position {
         println!("You can't move to the same position!!!");
         return false;
@@ -135,26 +135,26 @@ pub fn verify_new_position(converted: &ConvertedPositions) -> bool{
     true
 }
 
-pub fn is_move_valid(choosen_piece_ptr: &Piece, new_piece_position: &Position) -> bool {
+pub fn is_move_valid(chosen_piece_ptr: &Piece, new_piece_position: &Position) -> bool {
 
-    match choosen_piece_ptr.type_of.unwrap() {
+    match chosen_piece_ptr.type_of.unwrap() {
         TypeOfPiece::Pawn => {
-            match choosen_piece_ptr.color.unwrap() {
+            match chosen_piece_ptr.color.unwrap() {
                 ColorOfPiece::Black => {
-                    if choosen_piece_ptr.position.x == 1 && new_piece_position.x - choosen_piece_ptr.position.x == 2 && new_piece_position.y == choosen_piece_ptr.position.y {
+                    if chosen_piece_ptr.position.x == 1 && new_piece_position.x - chosen_piece_ptr.position.x == 2 && new_piece_position.y == chosen_piece_ptr.position.y {
                         return true;
                     }
 
-                    if new_piece_position.x - choosen_piece_ptr.position.x == 1 && new_piece_position.y == choosen_piece_ptr.position.y {
+                    if new_piece_position.x - chosen_piece_ptr.position.x == 1 && new_piece_position.y == chosen_piece_ptr.position.y {
                         return true;
                     }
                     return false;
                 },
                 ColorOfPiece::White => {
-                    if choosen_piece_ptr.position.x == 6 && choosen_piece_ptr.position.x - new_piece_position.x == 2 && new_piece_position.y == choosen_piece_ptr.position.y {
+                    if chosen_piece_ptr.position.x == 6 && chosen_piece_ptr.position.x - new_piece_position.x == 2 && new_piece_position.y == chosen_piece_ptr.position.y {
                         return true;
                     }
-                    if choosen_piece_ptr.position.x - new_piece_position.x == 1 && new_piece_position.y == choosen_piece_ptr.position.y {
+                    if chosen_piece_ptr.position.x - new_piece_position.x == 1 && new_piece_position.y == chosen_piece_ptr.position.y {
                         return true;
                     }
                     return false;
@@ -163,42 +163,42 @@ pub fn is_move_valid(choosen_piece_ptr: &Piece, new_piece_position: &Position) -
         }
 
         TypeOfPiece::Rook => {
-            if choosen_piece_ptr.position.x == new_piece_position.x || choosen_piece_ptr.position.y == new_piece_position.y{
+            if chosen_piece_ptr.position.x == new_piece_position.x || chosen_piece_ptr.position.y == new_piece_position.y{
                 return true;
             }
             return false;
         }
 
         TypeOfPiece::Bishop => {
-            if (new_piece_position.x as i32 - choosen_piece_ptr.position.x as i32).abs() == (new_piece_position.y as i32 - choosen_piece_ptr.position.y as i32).abs(){
+            if (new_piece_position.x as i32 - chosen_piece_ptr.position.x as i32).abs() == (new_piece_position.y as i32 - chosen_piece_ptr.position.y as i32).abs(){
                 return true;
             }
             return false;
         }
 
         TypeOfPiece::Knight => {
-            if  (new_piece_position.x as i32 - choosen_piece_ptr.position.x as i32).abs() == 2 && 
-                (new_piece_position.y as i32 - choosen_piece_ptr.position.y as i32).abs() == 1 {
+            if  (new_piece_position.x as i32 - chosen_piece_ptr.position.x as i32).abs() == 2 && 
+                (new_piece_position.y as i32 - chosen_piece_ptr.position.y as i32).abs() == 1 {
                 return true;
             }
-            if (choosen_piece_ptr.position.x as i32 - new_piece_position.x as i32).abs()  == 1 && (choosen_piece_ptr.position.x as i32 - new_piece_position.x as i32).abs() == 2{
+            if (chosen_piece_ptr.position.x as i32 - new_piece_position.x as i32).abs()  == 1 && (chosen_piece_ptr.position.x as i32 - new_piece_position.x as i32).abs() == 2{
                 return true;
             }
             return false;
         }
 
         TypeOfPiece::Queen => {
-            if choosen_piece_ptr.position.x == new_piece_position.x || choosen_piece_ptr.position.y == new_piece_position.y{
+            if chosen_piece_ptr.position.x == new_piece_position.x || chosen_piece_ptr.position.y == new_piece_position.y{
                 return true;
             }
-            if (new_piece_position.x as i32 - choosen_piece_ptr.position.x as i32).abs() == (new_piece_position.y as i32 - choosen_piece_ptr.position.y as i32).abs(){
+            if (new_piece_position.x as i32 - chosen_piece_ptr.position.x as i32).abs() == (new_piece_position.y as i32 - chosen_piece_ptr.position.y as i32).abs(){
                 return true;
             }
             return false;
         }
 
         TypeOfPiece::King => {
-            if  (choosen_piece_ptr.position.x as i32 - new_piece_position.x as i32).pow(2) + (choosen_piece_ptr.position.y as i32 - new_piece_position.y as i32).pow(2) <= 2 {
+            if  (chosen_piece_ptr.position.x as i32 - new_piece_position.x as i32).pow(2) + (chosen_piece_ptr.position.y as i32 - new_piece_position.y as i32).pow(2) <= 2 {
                     return true;
                 }
             return false;
